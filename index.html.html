@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>이채mini · 모바일 명함</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sky: #5BB8D4;
+    --sky-light: #A8DDED;
+    --sky-pale: #EAF7FC;
+    --sky-deep: #2E8FA8;
+    --white: #ffffff;
+    --text: #1A3A45;
+    --muted: #6A9BAA;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #E0F4FA 0%, #C8EBF5 50%, #B0DFF0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Sans KR', sans-serif;
+    padding: 24px 16px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: white;
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(43, 120, 150, 0.22), 0 4px 16px rgba(43,120,150,0.1);
+    position: relative;
+  }
+
+  /* Top wave header */
+  .card-header {
+    background: linear-gradient(135deg, var(--sky-deep) 0%, var(--sky) 60%, var(--sky-light) 100%);
+    padding: 36px 28px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -20px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Sky blue character SVG area */
+  .char-wrap {
+    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    filter: drop-shadow(0 4px 10px rgba(43,120,150,0.35));
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .char-wrap:active { transform: scale(1.08); }
+
+  .name-area { color: white; padding-top: 4px; }
+  .brand-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.78;
+    font-family: monospace;
+    margin-bottom: 4px;
+  }
+  .main-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .main-name span { opacity: 0.7; font-size: 18px; }
+  .tagline {
+    margin-top: 6px;
+    font-size: 11px;
+    opacity: 0.85;
+    line-height: 1.5;
+  }
+
+  /* Wave bottom of header */
+  .wave {
+    display: block;
+    width: 100%;
+    margin-bottom: -2px;
+  }
+
+  /* Sections */
+  .card-body { padding: 20px 24px 28px; }
+
+  .section { margin-bottom: 22px; }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sky-deep);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--sky-light);
+    border-radius: 2px;
+  }
+
+  /* Intro */
+  .intro-text {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.75;
+    background: var(--sky-pale);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--sky);
+  }
+
+  /* Projects */
+  .projects { display: flex; flex-direction: column; gap: 10px; }
+  .project-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--sky-pale);
+    border-radius: 14px;
+    padding: 12px 14px;
+    transition: transform 0.15s;
+  }
+  .project-item:active { transform: scale(0.98); }
+  .project-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--sky-deep), var(--sky));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .project-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .project-desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Rainbow dots (이채 accent) */
+  .rainbow-dots {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin: 4px 0 18px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  /* Call button */
+  .call-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--sky-deep), var(--sky));
+    color: white;
+    border-radius: 18px;
+    padding: 16px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: 0 6px 20px rgba(43,120,150,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .call-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 3px 10px rgba(43,120,150,0.25);
+  }
+  .call-icon {
+    width: 28px; height: 28px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  /* Footer */
+  .card-footer {
+    text-align: center;
+    padding: 0 24px 20px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Blink animation */
+  @keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+  }
+  .char-eyes { animation: blink 3.5s infinite; transform-origin: center; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .char-wrap svg { animation: float 3s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Header -->
+  <div class="card-header">
+    <div class="header-top">
+
+      <!-- Sky Blue 이채 Character -->
+      <div class="char-wrap" onclick="this.style.transform='scale(1.12)'; setTimeout(()=>this.style.transform='',300)">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shadow -->
+          <ellipse cx="60" cy="108" rx="28" ry="6" fill="rgba(43,120,150,0.25)"/>
+          <!-- Body layers -->
+          <ellipse cx="60" cy="62" rx="36" ry="38" fill="#3A9DBB"/>
+          <ellipse cx="60" cy="59" rx="33" ry="35" fill="#5BB8D4"/>
+          <ellipse cx="57" cy="56" rx="30" ry="32" fill="#80CCDF"/>
+          <!-- Tummy highlight -->
+          <ellipse cx="57" cy="64" rx="14" ry="17" fill="white" opacity="0.18"/>
+          <!-- Rainbow paint spots -->
+          <circle cx="40" cy="40" r="6" fill="#E8736A" opacity="0.9"/>
+          <circle cx="78" cy="44" r="5" fill="#E8C84A" opacity="0.9"/>
+          <circle cx="42" cy="72" r="7" fill="#5AAD7A" opacity="0.9"/>
+          <circle cx="80" cy="70" r="5" fill="#7A5FA0" opacity="0.9"/>
+          <circle cx="60" cy="36" r="5" fill="#E8736A" opacity="0.7"/>
+          <!-- Eyes -->
+          <g class="char-eyes">
+            <ellipse cx="48" cy="54" rx="5" ry="6" fill="#1A3A45"/>
+            <ellipse cx="72" cy="54" rx="5" ry="6" fill="#1A3A45"/>
+            <circle cx="50" cy="51" r="2" fill="white"/>
+            <circle cx="74" cy="51" r="2" fill="white"/>
+          </g>
+          <!-- Blush -->
+          <ellipse cx="38" cy="62" rx="7" ry="5" fill="#F4A0B0" opacity="0.45"/>
+          <ellipse cx="82" cy="62" rx="7" ry="5" fill="#F4A0B0" opacity="0.45"/>
+          <!-- Smile -->
+          <path d="M 50 68 Q 60 78 70 68" stroke="#1A3A45" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Arms -->
+          <ellipse cx="22" cy="68" rx="9" ry="7" fill="#80CCDF" transform="rotate(-25,22,68)"/>
+          <ellipse cx="98" cy="68" rx="9" ry="7" fill="#80CCDF" transform="rotate(25,98,68)"/>
+          <!-- Paintbrush -->
+          <g transform="translate(98,64) rotate(30)">
+            <rect x="-2" y="0" width="4" height="16" rx="2" fill="#D4A460"/>
+            <rect x="-2.5" y="14" width="5" height="4" rx="1" fill="#B0B0B0"/>
+            <ellipse cx="0" cy="22" rx="3" ry="5" fill="#E8736A"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Name & tagline -->
+      <div class="name-area">
+        <div class="brand-label">✦ Mobile Card ✦</div>
+        <div class="main-name">이채<span>mini</span></div>
+        <div class="tagline">
+          아이디어로 세상의 빈칸을<br>채우는 청년 기획자
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave -->
+  <svg class="wave" viewBox="0 0 380 32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,0 C80,32 300,0 380,24 L380,0 Z" fill="url(#grad)"/>
+    <defs>
+      <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#2E8FA8"/>
+        <stop offset="100%" stop-color="#A8DDED"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Body -->
+  <div class="card-body">
+
+    <!-- Rainbow dots accent -->
+    <div class="rainbow-dots">
+      <div class="dot" style="background:#E8736A"></div>
+      <div class="dot" style="background:#E8C84A"></div>
+      <div class="dot" style="background:#5AAD7A"></div>
+      <div class="dot" style="background:#5BB8D4"></div>
+      <div class="dot" style="background:#7A5FA0"></div>
+    </div>
+
+    <!-- Intro -->
+    <div class="section">
+      <div class="section-title">🌱 소개</div>
+      <div class="intro-text">
+        청년과 지역사회의 <strong>빈칸을 발견</strong>하고,<br>
+        AI와 기획으로 <strong>채워나가는 사람</strong>입니다.<br>
+        작은 아이디어가 세상을 이채롭게 만든다고 믿어요.
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="section">
+      <div class="section-title">🧩 주요 활동</div>
+      <div class="projects">
+        <div class="project-item">
+          <div class="project-icon">✏️</div>
+          <div>
+            <div class="project-name">빈칸을 채우는 사람들</div>
+            <div class="project-desc">청년 역량강화 · 지역사회 변화 프로젝트</div>
+          </div>
+        </div>
+        <div class="project-item">
+          <div class="project-icon">🌍</div>
+          <div>
+            <div class="project-name">NGO 활동</div>
+            <div class="project-desc">사회적 가치 실현 · 커뮤니티 임팩트</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="section">
+      <div class="section-title">🎓 학력</div>
+      <div class="projects">
+        <div class="project-item">
+          <div class="project-icon">🏫</div>
+          <div>
+            <div class="project-name">대구한의대학교</div>
+            <div class="project-desc">한방스포츠의학과 · 체육학사 졸업</div>
+          </div>
+        </div>
+        <div class="project-item">
+          <div class="project-icon">💻</div>
+          <div>
+            <div class="project-name">고려사이버대학교</div>
+            <div class="project-desc">보건의료학부 · 보건학사 졸업예정</div>
+          </div>
+        </div>
+        <div class="project-item">
+          <div class="project-icon">🤖</div>
+          <div>
+            <div class="project-name">고려사이버대학교</div>
+            <div class="project-desc">AI빅데이터 공학부 · 공학학사 졸업예정</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Awards -->
+    <div class="section">
+      <div class="section-title">🏆 주요 수상</div>
+      <div class="projects">
+        <div class="project-item">
+          <div class="project-icon">🥇</div>
+          <div>
+            <div class="project-name">충남데이터청년캠퍼스 프로젝트 경진대회</div>
+            <div class="project-desc">최우수상 · 2024</div>
+          </div>
+        </div>
+        <div class="project-item">
+          <div class="project-icon">🥈</div>
+          <div>
+            <div class="project-name">천안어반AI캠퍼스</div>
+            <div class="project-desc">우수상 · 2026</div>
+          </div>
+        </div>
+        <div class="project-item">
+          <div class="project-icon">🥈</div>
+          <div>
+            <div class="project-name">천안시 거점형 스마트 도시 조성사업 재직자 교육</div>
+            <div class="project-desc">우수상 · 2026</div>
+          </div>
+        </div>
+        <div class="project-item">
+          <div class="project-icon">🥈</div>
+          <div>
+            <div class="project-name">천안 스마트도시 도시문제 해결 아이디어톤</div>
+            <div class="project-desc">우수상 · 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call button -->
+    <div class="section" style="margin-bottom:0">
+      <div class="section-title">📞 연락하기</div>
+      <a href="tel:01077410404" class="call-btn">
+        <div class="call-icon">📞</div>
+        010-7741-0404 · 바로 통화
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="card-footer">
+    이채롭다 mini · 청년 × 지역 × AI 기획자
+  </div>
+
+</div>
+</body>
+</html>
